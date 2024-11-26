@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NBA Player Stats Lookup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4 text-center">NBA Player Stats</h1>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700">Season</label>
+            <select id="season-select" class="w-full p-2 border rounded">
+                <option value="2023">2023-2024</option>
+                <option value="2022">2022-2023</option>
+                <option value="2021">2021-2022</option>
+                <option value="2020">2020-2021</option>
+                <option value="2019">2019-2020</option>
+                <option value="2018">2018-2019</option>
+                <option value="2017">2017-2018</option>
+                <option value="2016">2016-2017</option>
+                <option value="2015">2015-2016</option>
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700">Team</label>
+            <input type="text" id="team-input" placeholder="Enter team name" 
+                   class="w-full p-2 border rounded">
+            <button id="fetch-team-btn" class="mt-2 w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                Get Team Players
+            </button>
+        </div>
+        
+        <div id="players-container" class="mb-4">
+            <!-- Players will be dynamically added here -->
+        </div>
+        
+        <div id="player-stats-container">
+            <!-- Player stats will be displayed here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
