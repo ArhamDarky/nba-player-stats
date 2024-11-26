@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playersContainer = document.getElementById('players-container');
     const playerStatsContainer = document.getElementById('player-stats-container');
 
-    const API_BASE_URL = 'http://localhost:5000';
+    const API_BASE_URL = 'https://nba-player-stats-9q26.onrender.com';
 
     fetchTeamBtn.addEventListener('click', async () => {
         const team = teamInput.value.trim();
