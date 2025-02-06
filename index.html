@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA Player Stats</title>
+    <title>NbaPlayerStats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -29,7 +29,7 @@
 <body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl">
         <div class="bg-blue-600 text-white p-6 rounded-t-2xl">
-            <h1 class="text-3xl font-bold text-center">NBA Player Stats Explorer</h1>
+            <h1 class="text-3xl font-bold text-center">NbaPlayerStats</h1>
         </div>
         
         <div class="p-6">
@@ -44,10 +44,6 @@
                     <option value="2017">2017-2018</option>
                     <option value="2016">2016-2017</option>
                     <option value="2015">2015-2016</option>
-                    <option value="2015">2014-2015</option>
-                    <option value="2015">2013-2014</option>
-                    <option value="2015">2012-2013</option>
-                    <option value="2015">2011-2012</option>
                 </select>
 
                 <input 
@@ -64,132 +60,39 @@
                     Get Players
                 </button>
             </div>
-
-            <div id="players-container" class="space-y-4">
+            
+            <p class="text-center text-gray-700 text-sm mt-4">This platform allows you to explore and analyze NBA player statistics from various seasons. Simply select a season, enter a team name, and retrieve player stats dynamically.</p>
+            
+            <div id="interactive-section" class="mt-6 text-center">
+                <button id="random-player-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 font-semibold">Show Random Player Fact</button>
+                <p id="player-fact" class="mt-4 text-gray-700 font-medium"></p>
+            </div>
+            
+            <div id="players-container" class="space-y-4 mt-4">
                 <!-- Players will be dynamically added here -->
             </div>
+            
+            <p id="click-instruction" class="text-center text-gray-700 text-sm mt-4 hidden">Click on a player's name to view their detailed statistics.</p>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const seasonSelect = document.getElementById('season-select');
-            const teamInput = document.getElementById('team-input');
-            const fetchTeamBtn = document.getElementById('fetch-team-btn');
-            const playersContainer = document.getElementById('players-container');
+        document.getElementById('random-player-btn').addEventListener('click', () => {
+            const facts = [
+                "LeBron James is the youngest player to reach 30,000 career points.",
+                "Wilt Chamberlain once scored 100 points in a single game.",
+                "Kobe Bryant scored 81 points in a game against the Toronto Raptors.",
+                "Michael Jordan won six NBA championships with the Chicago Bulls.",
+                "Steph Curry holds the record for most three-pointers in a season."
+            ];
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            document.getElementById('player-fact').innerText = randomFact;
+        });
 
-            const API_BASE_URL = 'https://nba-player-stats-9q26.onrender.com';
-
-            fetchTeamBtn.addEventListener('click', async () => {
-                const team = teamInput.value.trim();
-                const season = seasonSelect.value;
-
-                if (!team) {
-                    alert('Please enter a team name');
-                    return;
-                }
-
-                try {
-                    // Fetch team players
-                    const response = await fetch(`${API_BASE_URL}/get_team_players?team=${team}&season=${season}`);
-                    const players = await response.json();
-
-                    // Clear previous results
-                    playersContainer.innerHTML = '';
-
-                    if (players.error) {
-                        playersContainer.innerHTML = `
-                            <div class="text-center text-red-500 bg-red-50 p-4 rounded-lg">
-                                ${players.error}. Please check the team name and try again.
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    // Create player cards
-                    players.forEach((player) => {
-                        const playerCard = document.createElement('div');
-                        playerCard.classList.add('player-card', 'bg-white', 'border', 'border-gray-200', 'rounded-lg', 'overflow-hidden');
-                        
-                        // Player header with dropdown
-                        const playerHeader = document.createElement('div');
-                        playerHeader.classList.add('flex', 'justify-between', 'items-center', 'p-4', 'cursor-pointer', 'hover:bg-gray-50', 'transition');
-                        
-                        // Conditionally display jersey and position
-                        const jerseyText = player.jersey && player.jersey !== 'undefined' ? `#${player.jersey}` : '';
-                        const positionText = player.position && player.position !== 'undefined' ? player.position : '';
-                        const additionalInfo = [jerseyText, positionText].filter(Boolean).join(' | ');
-
-                        // Player info in header
-                        playerHeader.innerHTML = `
-                            <div>
-                                <h2 class="text-lg font-semibold text-gray-800">${player.name}</h2>
-                                ${additionalInfo ? `<p class="text-sm text-gray-500">${additionalInfo}</p>` : ''}
-                            </div>
-                            <i class="fas fa-chevron-down text-gray-500 dropdown-icon"></i>
-                        `;
-
-                        // Stats dropdown
-                        const statsDropdown = document.createElement('div');
-                        statsDropdown.classList.add('player-stats', 'p-4', 'bg-blue-50', 'text-sm');
-
-                        // Add click event to toggle stats
-                        playerHeader.addEventListener('click', async () => {
-                            const dropdownIcon = playerHeader.querySelector('.dropdown-icon');
-                            dropdownIcon.classList.toggle('rotate-180');
-                            statsDropdown.classList.toggle('active');
-
-                            // Fetch stats only if not already loaded
-                            if (statsDropdown.innerHTML.trim() === '') {
-                                try {
-                                    const statsResponse = await fetch(`${API_BASE_URL}/get_player_stats?player_id=${player.id}&season=${season}&is_playoffs=false`);
-                                    const stats = await statsResponse.json();
-
-                                    if (!stats.error) {
-                                        statsDropdown.innerHTML = `
-                                            <div>
-                                                <h3 class="font-bold text-blue-800 mb-2">Performance</h3>
-                                                <div class="grid grid-cols-2 gap-4">
-                                                    <div>
-                                                        <p><strong>Games Played:</strong> ${stats.games_played}</p>
-                                                        <p><strong>Points per Game:</strong> ${stats.ppg}</p>
-                                                        <p><strong>Rebounds per Game:</strong> ${stats.rpg}</p>
-                                                        <p><strong>Assists per Game:</strong> ${stats.apg}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p><strong>Field Goal %:</strong> ${stats.fg_percentage}%</p>
-                                                        <p><strong>3-Point %:</strong> ${stats.three_point_percentage}%</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `;
-                                    } else {
-                                        statsDropdown.innerHTML = `
-                                            <p class="text-red-500 text-center">No stats available for this player</p>
-                                        `;
-                                    }
-                                } catch (error) {
-                                    statsDropdown.innerHTML = `
-                                        <p class="text-red-500 text-center">Error fetching player stats</p>
-                                    `;
-                                    console.error('Error:', error);
-                                }
-                            }
-                        });
-
-                        playerCard.appendChild(playerHeader);
-                        playerCard.appendChild(statsDropdown);
-                        playersContainer.appendChild(playerCard);
-                    });
-                } catch (error) {
-                    playersContainer.innerHTML = `
-                        <div class="text-center text-red-500 bg-red-50 p-4 rounded-lg">
-                            Error fetching team players. Please check your connection and try again.
-                        </div>
-                    `;
-                    console.error('Error:', error);
-                }
-            });
+        document.getElementById('fetch-team-btn').addEventListener('click', () => {
+            setTimeout(() => {
+                document.getElementById('click-instruction').classList.remove('hidden');
+            }, 500);
         });
     </script>
 </body>
