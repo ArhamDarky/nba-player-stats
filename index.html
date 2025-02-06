@@ -62,11 +62,13 @@
             </div>
 
             <p class="text-center text-gray-700 text-sm mt-4">This platform allows you to explore and analyze NBA player statistics from various seasons. Simply select a season, enter a team name, and retrieve player stats dynamically.</p>
-        
+
             <div id="interactive-section" class="mt-6 text-center">
                 <button id="random-player-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 font-semibold">Show Random Player Fact</button>
                 <p id="player-fact" class="mt-4 text-gray-700 font-medium"></p>
+                <p class="text-xs text-gray-500 mt-2">Click on a player to view their stats</p> <!-- Small text added here -->
             </div>
+            
 
             <div id="players-container" class="space-y-4">
                 <!-- Players will be dynamically added here -->
@@ -92,7 +94,7 @@
                 document.getElementById('click-instruction').classList.remove('hidden');
             }, 500);
         });
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             const seasonSelect = document.getElementById('season-select');
             const teamInput = document.getElementById('team-input');
