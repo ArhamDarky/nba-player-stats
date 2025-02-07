@@ -7,6 +7,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+        .nba-wrapper {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .nba-header-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+        }
+        .nba-logo-image {
+            height: 50px;
+            display: block;
+            margin: 0 auto;
+        }
+        .nba-stats-text {
+            font-size: 12px;
+            color: black;
+            margin-top: 5px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
         .player-card {
             transition: all 0.3s ease;
         }
@@ -59,6 +88,14 @@
         }
     </style>
 </head>
+<body>
+    <div class="nba-wrapper">
+        <div class="nba-header-container">
+            <img class="nba-logo-image" src="https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg" alt="NBA Logo">
+            <div class="nba-stats-text">Player Stats</div>
+        </div>
+    </div>
+</body>
 <body class="bg-gray-50 min-h-screen p-4">
     <div class="content-wrapper">
         <div class="content-container">
