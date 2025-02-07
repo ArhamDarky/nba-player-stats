@@ -24,75 +24,283 @@
             transform: rotate(180deg);
             transition: transform 0.3s ease;
         }
+        #basketball-container {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background: transparent;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none; /* Container itself doesn't capture events */
+        }
+        #basketballCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: auto; /* Only the canvas captures events */
+        }
+        .content-wrapper {
+            position: relative;
+            z-index: 2; /* Content wrapper above basketball */
+            width: 100%;
+            pointer-events: none; /* Wrapper doesn't capture events */
+        }
+        .content-container {
+            pointer-events: auto; /* Content elements capture events */
+            max-width: 4xl;
+            margin: 0 auto;
+        }
+        @media (max-width: 1024px) {
+            #basketball-container {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl">
-        <div class="bg-blue-600 text-white p-6 rounded-t-2xl">
-            <h1 class="text-3xl font-bold text-center">NBA Player Stats Explorer</h1>
-        </div>
-        
-        <div class="p-6">
-            <div class="flex space-x-4 mb-6">
-                <select id="season-select" class="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="2023">2023-2024</option>
-                    <option value="2022">2022-2023</option>
-                    <option value="2021">2021-2022</option>
-                    <option value="2020">2020-2021</option>
-                    <option value="2019">2019-2020</option>
-                    <option value="2018">2018-2019</option>
-                    <option value="2017">2017-2018</option>
-                    <option value="2016">2016-2017</option>
-                    <option value="2015">2015-2016</option>
-                </select>
-
-                <input 
-                    type="text" 
-                    id="team-input" 
-                    placeholder="Enter Team Name" 
-                    class="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-
-                <button 
-                    id="fetch-team-btn" 
-                    class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 font-semibold"
-                >
-                    Get Players
-                </button>
-            </div>
-
-            <p class="text-center text-gray-700 text-sm mt-4">This platform allows you to explore and analyze NBA player statistics from various seasons. Simply select a season, enter a team name, and retrieve player stats dynamically.</p>
-
-            <div id="interactive-section" class="mt-6 text-center">
-                <button id="random-player-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 font-semibold">Show Random Player Fact</button>
-                <p id="player-fact" class="mt-4 text-gray-700 font-medium"></p>
-                <p class="text-xs text-gray-500 mt-2">Click on a player to view their stats</p> <!-- Small text added here -->
-            </div>
+<body class="bg-gray-50 min-h-screen p-4">
+    <div class="content-wrapper">
+        <div class="content-container">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-auto">
+                <!-- Your existing content structure remains the same -->
+                <div class="bg-blue-600 text-white p-6 rounded-t-2xl">
+                    <h1 class="text-3xl font-bold text-center">NBA Player Stats Explorer</h1>
+                </div>
             
+            <div class="p-6">
+                <!-- Your existing content structure remains the same -->
+                <div class="flex space-x-4 mb-6">
+                    <select id="season-select" class="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="2023">2023-2024</option>
+                        <option value="2022">2022-2023</option>
+                        <option value="2021">2021-2022</option>
+                        <option value="2020">2020-2021</option>
+                        <option value="2019">2019-2020</option>
+                        <option value="2018">2018-2019</option>
+                        <option value="2017">2017-2018</option>
+                        <option value="2016">2016-2017</option>
+                        <option value="2015">2015-2016</option>
+                    </select>
 
-            <div id="players-container" class="space-y-4">
-                <!-- Players will be dynamically added here -->
+                    <input 
+                        type="text" 
+                        id="team-input" 
+                        placeholder="Enter Team Name" 
+                        class="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+
+                    <button 
+                        id="fetch-team-btn" 
+                        class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 font-semibold"
+                    >
+                        Get Players
+                    </button>
+                </div>
+
+                <p class="text-center text-gray-700 text-sm mt-4">This platform allows you to explore and analyze NBA player statistics from various seasons. Simply select a season, enter a team name, and retrieve player stats dynamically.</p>
+
+                <div id="interactive-section" class="mt-6 text-center">
+                    <button id="random-player-btn" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 font-semibold">Show Random Player Fact</button>
+                    <p id="player-fact" class="mt-4 text-gray-700 font-medium"></p>
+                    <p class="text-xs text-gray-500 mt-2">Click on a player to view their stats. (Includes Preseason and Playoffs)</p>
+                </div>
+
+                <div id="players-container" class="space-y-4">
+                    <!-- Players will be dynamically added here -->
+                </div>
             </div>
         </div>
     </div>
+    
+    
+    <div id="basketball-container">
+        <canvas id="basketballCanvas"></canvas>
+    </div>
 
     <script>
+        // Basketball animation code
+        const canvas = document.getElementById("basketballCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        function resizeCanvas() {
+            const container = document.getElementById("basketball-container");
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        const ballImage = new Image();
+        ballImage.src = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
+        
+        const balls = [];
+        for (let i = 0; i < 20; i++) { // Increased number of balls
+            balls.push({
+                x: Math.random() * (canvas.width - 40) + 20,
+                y: Math.random() * canvas.height * 0.5,
+                radius: 30, // Slightly larger balls
+                dx: 0,
+                dy: 0,
+                gravity: 0.6,
+                friction: 0.9,
+                elasticity: 0.6,
+                isDragging: false,
+                lastX: 0,
+                lastY: 0
+            });
+        }
+        
+        function drawBalls() {
+            for (const ball of balls) {
+                ctx.drawImage(ballImage, ball.x - ball.radius, ball.y - ball.radius, ball.radius * 2, ball.radius * 2);
+            }
+        }
+        
+        function resolveCollisions() {
+            for (let i = 0; i < balls.length; i++) {
+                for (let j = i + 1; j < balls.length; j++) {
+                    const ball1 = balls[i];
+                    const ball2 = balls[j];
+                    const dx = ball2.x - ball1.x;
+                    const dy = ball2.y - ball1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = ball1.radius + ball2.radius;
+                    
+                    if (distance < minDist) {
+                        const angle = Math.atan2(dy, dx);
+                        const overlap = minDist - distance;
+                        const moveX = (overlap / 2) * Math.cos(angle);
+                        const moveY = (overlap / 2) * Math.sin(angle);
+                        
+                        ball1.x -= moveX;
+                        ball1.y -= moveY;
+                        ball2.x += moveX;
+                        ball2.y += moveY;
+                    }
+                }
+            }
+        }
+        
+        function updateBalls() {
+            for (const ball of balls) {
+                if (!ball.isDragging) {
+                    ball.dy += ball.gravity;
+                    ball.x += ball.dx;
+                    ball.y += ball.dy;
+                    
+                    if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+                        ball.dx *= -ball.friction;
+                        ball.x = Math.max(ball.radius, Math.min(canvas.width - ball.radius, ball.x));
+                    }
+                    
+                    if (ball.y + ball.radius > canvas.height) {
+                        ball.dy *= -ball.elasticity;
+                        ball.y = canvas.height - ball.radius;
+                        ball.dx *= ball.friction;
+                    }
+                    
+                    if (ball.y - ball.radius < 5) {
+                        ball.dy *= -ball.elasticity;
+                        ball.y = ball.radius + 5;
+                    }
+                }
+            }
+            resolveCollisions();
+        }
+        
+        function getCanvasMousePosition(event) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (event.clientX - rect.left) * scaleX,
+                y: (event.clientY - rect.top) * scaleY
+            };
+        }
+        
+        function isInsideBall(x, y, ball) {
+            return Math.sqrt((x - ball.x) ** 2 + (y - ball.y) ** 2) < ball.radius;
+        }
+        
+        canvas.addEventListener("mousedown", (event) => {
+            const pos = getCanvasMousePosition(event);
+            for (const ball of balls) {
+                if (isInsideBall(pos.x, pos.y, ball)) {
+                    ball.isDragging = true;
+                    ball.lastX = pos.x;
+                    ball.lastY = pos.y;
+                    break;
+                }
+            }
+        });
+        
+        canvas.addEventListener("mousemove", (event) => {
+            const pos = getCanvasMousePosition(event);
+            for (const ball of balls) {
+                if (ball.isDragging) {
+                    ball.x = pos.x;
+                    ball.y = pos.y;
+                }
+            }
+        });
+        
+        canvas.addEventListener("mouseup", (event) => {
+            const pos = getCanvasMousePosition(event);
+            for (const ball of balls) {
+                if (ball.isDragging) {
+                    ball.isDragging = false;
+                    ball.dx = (pos.x - ball.lastX) * 0.1;
+                    ball.dy = (pos.y - ball.lastY) * 0.1;
+                }
+            }
+        });
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBalls();
+            updateBalls();
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        // Your existing NBA stats code
         document.getElementById('random-player-btn').addEventListener('click', () => {
             const facts = [
                 "LeBron James is the youngest player to reach 30,000 career points.",
                 "Wilt Chamberlain once scored 100 points in a single game.",
                 "Kobe Bryant scored 81 points in a game against the Toronto Raptors.",
                 "Michael Jordan won six NBA championships with the Chicago Bulls.",
-                "Steph Curry holds the record for most three-pointers in a season."
+                "Steph Curry holds the record for most three-pointers in a season.",
+                "The NBA's first official game was played on November 1, 1946, between the New York Knicks and the Toronto Huskies.",
+                "Michael Jordan once retired to play baseball for a brief period in the 1990s.",
+                "The NBA was originally called the Basketball Association of America (BAA).",
+                "The longest winning streak in NBA history is 33 games, held by the 1971-72 Los Angeles Lakers.",
+                "Shaquille O'Neal made just one three-pointer in his entire career.",
+                "The Boston Celtics and the Los Angeles Lakers have each won 17 NBA championships, tied for the most in history.",
+                "Kareem Abdul-Jabbar holds the NBA record for most career points scored (38,387).",
+                "The shortest player to ever play in the NBA is Tyrone 'Muggsy' Bogues, standing at 5 feet 3 inches.",
+                "The NBA introduced the three-point line in 1979.",
+                "LeBron James has been to the NBA Finals 10 times in his career.",
+                "The 'NBA Jam' video game, which became a huge hit in the 1990s, was the first to feature players dunking from half-court.",
+                "The NBA once had a team in Canada called the Vancouver Grizzlies, which later became the Memphis Grizzlies.",
+                "The Philadelphia 76ers once drafted future Hall of Famer Kobe Bryant, but traded him to the Los Angeles Lakers on draft night.",
+                "Wilt Chamberlain is the only player to score 100 points in a single game.",
+                "The NBA logo is based on a silhouette of Jerry West, who was a former player and executive for the league.",
+                "The Golden State Warriors set a new record for the most wins in a regular season, with 73 victories in the 2015-16 season.",
+                "The most points scored by a single player in a single game is 81, a feat achieved by Kobe Bryant in 2006.",
+                "Dennis Rodman once went to Las Vegas during the NBA Finals, leaving his team to party for 48 hours before returning to play.",
+                "The NBA's official ball was made of leather until 2006, when a synthetic ball was introduced but quickly switched back after complaints from players.",
+                "The first-ever NBA All-Star Game was held in 1951 in Boston.",
+                "The Chicago Bulls' 1995-96 team, led by Michael Jordan and Scottie Pippen, finished the regular season with a 72-10 record.",
+                "The NBA's first African American player was Earl Lloyd, who debuted in 1950 for the Washington Capitols.",
+                "The fastest player to reach 30,000 career points is LeBron James, doing so at the age of 33.",
+                "The NBA Finals MVP trophy is named after Bill Russell, a former player and coach for the Boston Celtics.",
+                "In 2019, the NBA became the first major North American sports league to open an office in Africa.",
             ];
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
             document.getElementById('player-fact').innerText = randomFact;
-        });
-
-        document.getElementById('fetch-team-btn').addEventListener('click', () => {
-            setTimeout(() => {
-                document.getElementById('click-instruction').classList.remove('hidden');
-            }, 500);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -113,11 +321,9 @@
                 }
 
                 try {
-                    // Fetch team players
                     const response = await fetch(`${API_BASE_URL}/get_team_players?team=${team}&season=${season}`);
                     const players = await response.json();
 
-                    // Clear previous results
                     playersContainer.innerHTML = '';
 
                     if (players.error) {
@@ -129,21 +335,17 @@
                         return;
                     }
 
-                    // Create player cards
                     players.forEach((player) => {
                         const playerCard = document.createElement('div');
                         playerCard.classList.add('player-card', 'bg-white', 'border', 'border-gray-200', 'rounded-lg', 'overflow-hidden');
                         
-                        // Player header with dropdown
-                        const playerHeader = document.createElement('div');
-                        playerHeader.classList.add('flex', 'justify-between', 'items-center', 'p-4', 'cursor-pointer', 'hover:bg-gray-50', 'transition');
-                        
-                        // Conditionally display jersey and position
                         const jerseyText = player.jersey && player.jersey !== 'undefined' ? `#${player.jersey}` : '';
                         const positionText = player.position && player.position !== 'undefined' ? player.position : '';
                         const additionalInfo = [jerseyText, positionText].filter(Boolean).join(' | ');
 
-                        // Player info in header
+                        const playerHeader = document.createElement('div');
+                        playerHeader.classList.add('flex', 'justify-between', 'items-center', 'p-4', 'cursor-pointer', 'hover:bg-gray-50', 'transition');
+                        
                         playerHeader.innerHTML = `
                             <div>
                                 <h2 class="text-lg font-semibold text-gray-800">${player.name}</h2>
@@ -152,17 +354,14 @@
                             <i class="fas fa-chevron-down text-gray-500 dropdown-icon"></i>
                         `;
 
-                        // Stats dropdown
                         const statsDropdown = document.createElement('div');
                         statsDropdown.classList.add('player-stats', 'p-4', 'bg-blue-50', 'text-sm');
 
-                        // Add click event to toggle stats
                         playerHeader.addEventListener('click', async () => {
                             const dropdownIcon = playerHeader.querySelector('.dropdown-icon');
                             dropdownIcon.classList.toggle('rotate-180');
                             statsDropdown.classList.toggle('active');
 
-                            // Fetch stats only if not already loaded
                             if (statsDropdown.innerHTML.trim() === '') {
                                 try {
                                     const statsResponse = await fetch(`${API_BASE_URL}/get_player_stats?player_id=${player.id}&season=${season}&is_playoffs=false`);
@@ -182,9 +381,9 @@
                                                     <div>
                                                         <p><strong>Field Goal %:</strong> ${stats.fg_percentage}%</p>
                                                         <p><strong>3-Point %:</strong> ${stats.three_point_percentage}%</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
                                         `;
                                     } else {
                                         statsDropdown.innerHTML = `
@@ -215,5 +414,7 @@
             });
         });
     </script>
+</body>
+</html>
 </body>
 </html>
